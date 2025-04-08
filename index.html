@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Productos Congelados</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#90ee90">
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: linear-gradient(to bottom, #ffffff, #cceeff);
+    }
+    .producto {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+    .producto img {
+      width: 90%;
+      max-width: 300px;
+      border-radius: 10px;
+    }
+    .nombre {
+      font-weight: bold;
+      margin: 8px 0 4px 0;
+      text-align: center;
+    }
+    .precio {
+      margin-bottom: 8px;
+      color: #333;
+    }
+    .cantidad {
+      margin-bottom: 12px;
+      width: 60px;
+    }
+    #whatsapp {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #90ee90;
+      color: white;
+      font-size: 20px;
+      text-align: center;
+      padding: 15px;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <form id="formulario"></form>
+  <button id="whatsapp" onclick="enviarPedido()">Enviar pedido por WhatsApp</button>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+
+    const productos = [
+      { nombre: 'Acelga gds', precio: 2230 },
+      { nombre: 'Acelga lucchetti', precio: 1955 },
+      { nombre: 'Arvejas gds', precio: 2130 },
+      { nombre: 'Primavera gds', precio: 2809 },
+      { nombre: 'Brocoli gds', precio: 3280 },
+      { nombre: 'Brocoli lucchetti', precio: 2385 },
+      { nombre: 'Choclo gds', precio: 1837 },
+      { nombre: 'Epinaca lucchetti', precio: 1940 },
+      { nombre: 'Espinaca gds', precio: 2637 },
+      { nombre: 'Filet de merluza gds', precio: 6182 },
+      { nombre: 'Medallon de merluza gds', precio: 4144 },
+      { nombre: 'Medallon de pollo gds', precio: 3797 },
+      { nombre: 'Milanesa arroz y vegetales gds', precio: 2700 },
+      { nombre: 'Milanesa casera gds', precio: 2161 },
+      { nombre: 'Milanesa casera grande gds', precio: 3809 },
+      { nombre: 'Milanesa de soja lucchetti 290gr', precio: 1644 },
+      { nombre: 'Milanesa de soja lucchetti 560', precio: 3488 },
+      { nombre: 'Milanesa espinaca gds', precio: 2690 },
+      { nombre: 'Milanesa soja calabaza gds', precio: 2186 },
+      { nombre: 'Milanesa soja espinaca', precio: 2186 },
+      { nombre: 'Nuggets 400gr gds', precio: 4721 },
+      { nombre: 'Nuggets 900gr gds', precio: 9649 },
+      { nombre: 'Patitas 1kl gds', precio: 11094 },
+      { nombre: 'Patitas 400gr gds', precio: 4122 },
+      { nombre: 'Baston de merluza gds', precio: 2456 },
+      { nombre: 'Suprema de pollo gds', precio: 4843 },
+      { nombre: 'Suprema espinaca y queso gds', precio: 4752 },
+    ];
+
+    const formulario = document.getElementById('formulario');
+    productos.forEach((producto, index) => {
+      const div = document.createElement('div');
+      div.className = 'producto';
+      div.innerHTML = `
+        <img src="images/producto${index + 1}.jpg" alt="${producto.nombre}">
+        <div class="nombre">${producto.nombre}</div>
+        <div class="precio">$${producto.precio}</div>
+        <input type="number" min="0" class="cantidad" id="cantidad${index}" placeholder="Cant.">
+      `;
+      formulario.appendChild(div);
+    });
+
+    function enviarPedido() {
+      let mensaje = 'Hola! Quiero hacer un pedido:%0A';
+      productos.forEach((producto, index) => {
+        const cantidad = document.getElementById(`cantidad${index}`).value;
+        if (cantidad && cantidad > 0) {
+          mensaje += `- ${producto.nombre} x ${cantidad}%0A`;
+        }
+      });
+      if (mensaje === 'Hola! Quiero hacer un pedido:%0A') {
+        alert('Por favor seleccioná al menos un producto.');
+        return;
+      }
+      window.open(`https://wa.me/54901135012333?text=${mensaje}`, '_blank');
+    }
+  </script>
+</body>
+</html>
